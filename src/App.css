@@ -1,38 +1,373 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+body{
+    font-family: "Roboto", sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.logo {
+    background-image: url("https://images.pexels.com/photos/1666813/pexels-photo-1666813.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
+    width: 100%;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    font-size: 36px;
+    font-weight: 300;
+    overflow: hidden;
+    position: relative; /* Make sure position is set */
+    animation: bg 5s linear infinite;
+    
+    text-transform: uppercase;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.dropping-texts {
+    display: inline-block;
+    width: 180px;
+    text-align: left;
+    height: 36px;
+    vertical-align: -2px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.dropping-texts > div {
+    font-size:0px;
+    opacity:0;
+    margin-left:-30px;
+    position:absolute;
+    font-weight:300;
+    box-shadow: 0px 60px 25px -20px rgba(0,0,0,0.5);
 }
 
-.App-link {
-  color: #61dafb;
+.dropping-texts > div:nth-child(1) {
+    animation: roll 5s linear infinite 0s;
+}
+.dropping-texts > div:nth-child(2) {
+    animation: roll 5s linear infinite 1s;
+}
+.dropping-texts > div:nth-child(3) {
+    animation: roll 5s linear infinite 2s;
+}
+.dropping-texts > div:nth-child(4) {
+    animation: roll2 5s linear infinite 3s;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+@keyframes roll {
+    0% {
+        font-size:0px;
+        opacity:0;
+        margin-left:-30px;
+        margin-top:0px;
+        transform: rotate(-25deg);
+    }
+    3% {
+        opacity:1;
+        transform: rotate(0deg);
+    }
+    5% {
+        font-size:inherit;
+        opacity:1;
+        margin-left:0px;
+        margin-top:0px;
+    }
+    20% {
+        font-size:inherit;
+        opacity:1;
+        margin-left:0px;
+        margin-top:0px;
+        transform: rotate(0deg);
+    }
+    27% {
+        font-size:0px;
+        opacity:0.5;
+        margin-left:20px;
+        margin-top:100px;
+    }
+    100% {
+        font-size:0px;
+        opacity:0;
+        margin-left:-30px;
+        margin-top:0px;
+        transform: rotate(15deg);
+    }
 }
+
+@keyframes roll2 {
+    0% {
+        font-size:0px;
+        opacity:0;
+        margin-left:-30px;
+        margin-top:0px;
+        transform: rotate(-25deg);
+    }
+    3% {
+        opacity:1;
+        transform: rotate(0deg);
+    }
+    5% {
+        font-size:inherit;
+        opacity:1;
+        margin-left:0px;
+        margin-top:0px;
+    }
+    30% {
+        font-size:inherit;
+        opacity:1;
+        margin-left:0px;
+        margin-top:0px;
+        transform: rotate(0deg);
+    }
+    37% {
+        font-size:0px;
+        opacity:0;
+        margin-left:-1000px;
+        margin-top:-800px;
+    }
+    100% {
+        font-size:0px;
+        opacity:0;
+        margin-left:-30px;
+        margin-top:0px;
+        transform: rotate(15deg);
+    }
+}
+
+.cb1 {
+    background-color: rgba(225,225,225, 0.1)
+}
+
+.card1 {
+    backdrop-filter: blur(0.3rem) ;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    color: #462801;
+}
+
+
+
+/*TOOLBAR*/
+
+.toolbar {
+    color: #462801;
+    padding: 1em;
+    text-transform: uppercase;
+    font-size: 15px;
+    text-shadow: none;
+    font-weight: 300;
+   
+}
+
+.toolbar a{
+    color: #462801;
+    text-decoration: none;
+}
+
+.toolbar a:hover{
+    color: #000000;
+}
+
+
+a:hover{
+    color: #272727;
+    text-decoration: underline;
+}
+
+span {
+    text-decoration: none;
+    color: #462801 !important;
+}
+
+span:hover {
+    text-decoration: none;
+    color: #000000 !important;
+}
+
+/* Remove focus border and text color from Bootstrap pagination buttons */
+.page-link:focus {
+    outline: none;       /* Removes the blue outline */
+    box-shadow: none;    /* Removes the shadow that appears when clicked */
+    border-color: #ddd;  /* Keep a light border */
+    color: #000;         /* Make the text black (or any color you prefer) */
+}
+
+.page-link {
+    color: #000;         /* Make the text color black */
+}
+
+/* Optional: Remove any hover color if needed */
+.page-link:hover {
+    color: #000;         /* Ensures the hover text is black */
+}
+
+.btn, .card, input, img, .list-group, .card-header, textarea, .alert{
+    border-radius: 0 !important;
+}
+
+input:focus, select:focus, textarea:focus {
+    box-shadow: 0 0 0 3px #dadada !important;
+    border: 1px solid #dadada !important;
+    
+}
+:root {
+    --bs-primary-rgb: 180, 160, 128;
+    --bs-warning-rgb: 180, 160, 128;
+}
+
+/* Apply the custom primary color to bg-primary */
+.bg-primary {
+    --bs-primary-rgb: 180, 160, 128; /* New RGB color */
+    background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
+}
+
+:root {
+    --bs-warning: #b4a080 !important;;
+    --bs-link-color: #462801  !important;; /* Custom color for links */
+    --bs-link-color-rgb: 160,128,255 !important;; /* RGB values for your custom link color */
+}
+
+/* Override the .btn-warning styles */
+.btn-warning {
+    --bs-btn-bg: #b4a080 !important; /* Set the custom background */
+    --bs-btn-border-color: #b4a080 !important; /* Set the custom border */
+    --bs-btn-hover-bg: #9f8c5b !important; /* Slightly lighter shade for hover */
+    --bs-btn-hover-border-color: #b49f69 !important; /* Slightly lighter for hover border */
+    --bs-btn-active-bg: #b49362 !important; /* Darker shade for active state */
+    --bs-btn-active-border-color: #b49362 !important; /* Darker border for active state */
+    --bs-btn-disabled-bg: #b4a080 !important; /* Disabled background */
+    --bs-btn-disabled-border-color: #b4a080 !important; /* Disabled border */
+}
+
+a {
+    color: var(--bs-link-color) !important; /* Apply the custom link color */
+    text-decoration: none !important; /* Remove the underline */
+}
+
+/* Optional: Style for link hover state */
+a:hover {
+    color: #000000 !important; /* Lighter shade of your custom color for hover state */
+    text-decoration: underline !important; /* Keep the underline on hover */
+}
+
+/* Optional: Active state for links */
+a:active {
+    color: #462801 ; /* Even darker shade for active state */
+}
+
+
+/*Menu */
+
+/* Ensures the navbar-toggler has no border and transparent background */
+.navbar-toggler {
+    border: none !important;
+    padding: 0.25rem 0.75rem !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: transparent !important;
+    outline: none !important;
+    margin-top: 15px;
+}
+
+/* Hamburger icon styling */
+.navbar-toggler-icon {
+    display: block !important;
+    width: 30px !important;
+    height: 3px !important;
+    background-color: #462801 !important;
+    border-radius: 5px !important;
+    position: relative !important;
+    box-shadow: none !important;
+    z-index: 10 !important;
+}
+
+/* Reset any possible pseudo-elements */
+.navbar-toggler-icon::before,
+.navbar-toggler-icon::after {
+    content: '' !important;
+    position: absolute !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 3px !important;
+    border: none !important; /* Remove any border */
+    background-color: #462801 !important; /* Ensure these bars are white */
+    border-radius: 5px !important;
+    transition: all 0.3s ease !important;
+    z-index: 1 !important;  /* Ensure these are below the middle bar */
+}
+
+/* Positioning of the top and bottom bars correctly */
+.navbar-toggler-icon::before {
+    top: -8px !important;
+}
+
+.navbar-toggler-icon::after {
+    bottom: -8px !important;
+}
+
+/* Modal styles */
+.menu-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;  /* Adjust width as needed */
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);  /* Dark semi-transparent background */
+    transform: translateX(100%);  /* Hide modal off-screen */
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.menu-modal.open {
+    transform: translateX(0);  /* Slide in from the right */
+}
+
+.menu-content {
+    background-color: white;
+    color: #333;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.navbar-nav {
+    list-style-type: none;
+    padding: 0;
+}
+
+.nav-item {
+    margin: 10px 0;
+}
+
+.nav-link {
+    color: #333;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+/* Ensures no border or outline for the modal content */
+.menu-content a {
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: #f44336;
+    font-size: 30px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #000000;
+}
+
+
+.alert {
+    font-size: 13px !important;
+}
+
