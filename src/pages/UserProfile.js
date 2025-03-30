@@ -14,28 +14,17 @@ const UserProfile = ({ socket }) => {
     const [messageStatus, setMessageStatus] = useState("");  // Track success/error message
     const inputRef = useRef(null);
 
+
+    // USER IS ONLINE OR NOT
     useEffect(() => {
         if (!socket) return;
 
         socket.on("allUsers", (users) => {
-            console.log("Updated online users:", users);
-            setProfile((prev) => {
-                if (prev) {
-                    return {
-                        ...prev,
-                        online: users.some(u => u.userId === prev.id),  // Check if this user's ID is in the online users list
-                    };
-                }
-                return prev;
-            });
+            setProfile((prev) => prev ? { ...prev, online: users.some(u => u.username === prev.username) } : prev);
         });
 
-        return () => {
-            socket.off("allUsers");
-        };
+        return () => socket.off("allUsers");
     }, [socket]);
-
-
 
     const fetchUserProfile = async () => {
         const token = localStorage.getItem("token");
@@ -118,10 +107,10 @@ const UserProfile = ({ socket }) => {
 
         console.log("Sending message:", newMessage);
 
-        // Emit the message via Socket.io (for real-time updates)
-        socket.emit("sendMessage", newMessage); // Emit to server for real-time chat
 
-        // Optionally, handle the backend response (status)
+        socket.emit("sendMessage", newMessage);
+
+
         socket.once("messageStatus", (status) => {
             if (status.success) {
                 console.log("Message saved:", status.message);
@@ -136,23 +125,21 @@ const UserProfile = ({ socket }) => {
             }
         });
 
-        setMessage(""); // Clear message input after sending
-
+        setMessage("");
     };
-
 
     if (!profile) return <div>Loading...</div>;
 
     return (
         <div className="container">
-            <BackButton/>
+            <BackButton />
             <h4 className="text-center mb-3">{profile.username}'s Profile</h4>
             <div className="p-4 container mt-3">
                 <div className="row align-items-center p-3">
                     <div className="col-md-4 d-flex justify-content-center align-items-center p-0"
-                         style={{objectFit: 'cover', maxHeight: '300px', overflow: 'hidden'}}>
+                         style={{ objectFit: 'cover', maxHeight: '300px', overflow: 'hidden' }}>
                         <img src={profile.image} alt="Profile" className="mb-3"
-                             style={{width: '100%', height: 'auto'}}/>
+                             style={{ width: '100%', height: 'auto' }} />
                     </div>
                     <div className="col-md-8">
                         <p className='m-3'>{profile.online ? (
@@ -179,7 +166,7 @@ const UserProfile = ({ socket }) => {
                                     onChange={(e) => {
                                         setMessage(e.target.value); // Update message state
                                         setMessageStatus("");        // Reset message status when the user starts typing
-                                    }}  />
+                                    }} />
                                 <button className="btn btn-warning ms-2" onClick={handleSendMessage}>Send</button>
                             </div>
                             {messageStatus && (
@@ -202,7 +189,7 @@ const UserProfile = ({ socket }) => {
                             <p>No posts by this user.</p>
                         ) : (
                             userPosts.map((post) => (
-                                <div key={post._id} className='col-12  col-md-6 col-lg-4 col-xl-3 mb-4'>
+                                <div key={post._id} className='col-12 col-md-6 col-lg-4 col-xl-3 mb-4'>
                                     <div
                                         className="card"
                                         style={{
@@ -251,9 +238,7 @@ const UserProfile = ({ socket }) => {
                                                     </h5>
                                                     <p className="text-muted">
                                                         <strong>Posted by: </strong>
-
-                                                    {post.username}
-
+                                                        {post.username}
                                                     </p>
                                                 </div>
                                                 <div>
@@ -280,5 +265,6 @@ const UserProfile = ({ socket }) => {
 };
 
 export default UserProfile;
+
 
 

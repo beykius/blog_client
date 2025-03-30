@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import useStore from "../store/main";
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import BackButton from "../components/BackButton";
 
 
@@ -17,26 +15,20 @@ const Messages = ({ socket }) => {
 
 
 
-    // Listen for "allUsers" event to update online status
+    // ONLINE OR NOT
     useEffect(() => {
         if (!socket) return;
-        const updateUsersOnline = (updatedUsers) => {
-            setUsers(prevUsers => {
-                return prevUsers.map(user => {
-                    const onlineUser = updatedUsers.find(onlineUser => onlineUser.id === user._id);
-                    if (onlineUser) {
-                        return { ...user, online: true }; // Mark as online if the user is in the updated list
-                    }
-                    return { ...user, online: false }; // Mark as offline if the user is not in the updated list
-                });
-            });
-        };
 
-        socket.on("allUsers", updateUsersOnline);
+        socket.on("allUsers", (onlineUsers) => {
+            setUsers((prevUsers) =>
+                prevUsers.map((user) => ({
+                    ...user,
+                    online: onlineUsers.some((u) => u.username === user.username),
+                }))
+            );
+        });
 
-        return () => {
-            socket.off("allUsers", updateUsersOnline);
-        };
+        return () => socket.off("allUsers");
     }, [socket]);
 
 
@@ -188,11 +180,6 @@ const Messages = ({ socket }) => {
     };
 
     const deleteMessages = (messageId) => {
-        if (!messageId) {
-            toast.error("You cannot delete this message, please try again later.");
-            return;
-        }
-
         socket.emit("deleteMessage", { messageId });
 
         setMessages(prevMessages => prevMessages.filter(message => message._id !== messageId));
@@ -335,7 +322,6 @@ const Messages = ({ socket }) => {
                     </div>
                 </div>
             </div>
-            <div><ToastContainer /></div>
         </div>
     );
 };

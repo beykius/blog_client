@@ -32,6 +32,8 @@ const Login = ({socket}) => {
 
             if (response.ok && data.token) {
                 socket.emit("login", username, data.id);
+                socket.emit("allUsers");
+
                 localStorage.setItem("token", data.token);
                 setUser({
                     username,
@@ -50,6 +52,7 @@ const Login = ({socket}) => {
             setError("An error occurred. Please try again.");
         }
     };
+
 
 
     return (
