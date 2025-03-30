@@ -24,9 +24,17 @@ const MyFavorites = () => {
                 return;
             }
 
-            const res = await fetch(`http://localhost:2002/posts/favorites/${user._id}`, {
-                method: "GET",
-                headers: {"Authorization": `Bearer ${token}`},
+            console.log("Fetching favorites for userId:", user._id);  // Check if user._id is correct
+
+            const res = await fetch('http://localhost:2002/posts/favorites', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    userId: user._id,  // Send userId as part of the request body
+                }),
             });
 
             if (!res.ok) {
@@ -35,6 +43,7 @@ const MyFavorites = () => {
 
             const data = await res.json();
             if (data.success) {
+                console.log('user', user);
                 setFavorites(data.favorites);
             } else {
                 console.error("Failed to fetch favorites:", data.message);
@@ -48,6 +57,7 @@ const MyFavorites = () => {
         fetchFavorites();
     }, [token, user]);
 
+
     // Function to toggle like
     const toggleLike = async (postId) => {
         const token = localStorage.getItem("token");
@@ -56,15 +66,26 @@ const MyFavorites = () => {
             return;
         }
 
+        // Ensure that the `user` object has a valid `_id`
+        if (!user || !user._id) {
+            console.error("User ID is missing");
+            return;
+        }
+
         const res = await fetch(`http://localhost:2002/posts/like/${postId}`, {
             method: "POST",
-            headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
-            body: JSON.stringify({user}),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                userId: user._id,  // Send the correct userId in the body
+            }),
         });
 
         const data = await res.json();
         if (data.success) {
-            fetchFavorites();
+            fetchFavorites(); // Refresh favorites after toggling like
         } else {
             console.error("Failed to toggle like:", data.message);
         }

@@ -255,14 +255,14 @@ const Messages = ({ socket }) => {
                                 src={profile?.image || "https://static.thenounproject.com/png/1195135-200.png"}
                                 alt={profile?.username || "No Image Available"}
                                 className="rounded-circle mr-2"
-                                style={{ width: 50, height: 50, objectFit: "cover" }}
+                                style={{width: 50, height: 50, objectFit: "cover"}}
                             />
 
                             <h5 className="mb-0 ms-1 p-3">
                                 {profile?.username ? `Chat with ${profile.username}` : "Select a user to see chat"}
                             </h5>
                         </div>
-                        <div className="card-body chat-box p-3" style={{ height: "400px", overflowY: "auto" }}>
+                        <div className="card-body chat-box p-3" style={{height: "400px", overflowY: "auto"}}>
                             {messages.map((msg, index) => (
                                 <div key={index}
                                      className={`d-flex mb-3 align-items-center ${msg.senderId === user._id ? 'justify-content-end' : 'justify-content-start'}`}>
@@ -307,21 +307,26 @@ const Messages = ({ socket }) => {
                             <div ref={messagesEndRef}></div>
                         </div>
                         <div className="card-footer">
-                            <form onSubmit={handleSendMessage} className="d-flex">
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Type a message"
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                    required
-                                />
-                                <button type="submit" className="btn btn-warning ms-2">Send</button>
-                            </form>
+                            {profile ? (
+                                <form onSubmit={handleSendMessage} className="d-flex">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Type a message"
+                                        value={message}
+                                        onChange={(e) => setMessage(e.target.value)}
+                                        required
+                                    />
+                                    <button type="submit" className="btn btn-warning ms-2">Send</button>
+                                </form>
+                            ) : (
+                                <p className="text-center text-muted">Select a user to start chatting</p>
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     );
 };

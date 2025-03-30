@@ -24,6 +24,7 @@ const CreatePost = () => {
         }
     };
 
+    // In your CreatePost component, explicitly pass user._id and user.username
     const handleSubmit = async () => {
         if (!title || !description) {
             setMessage("Please fill in both fields.");
@@ -31,12 +32,15 @@ const CreatePost = () => {
             return;
         }
 
+        // Ensure user data is correctly captured
         const postData = {
             title,
             description,
             postImage,
             time: new Date().toLocaleString("en-GB"),
-            user: user,
+            userId: user?._id,  // Ensure this is correctly capturing the logged-in user's ID
+            username: user?.username,  // Ensure this is correctly capturing the logged-in user's username
+            userImage: user?.image || "default-image.jpg",
         };
 
         const token = localStorage.getItem("token");
@@ -44,33 +48,34 @@ const CreatePost = () => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}` // Ensure token is included with "Bearer"
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(postData),
         };
 
-        fetch("http://localhost:2002/create", options)
-            .then(res => res.json())
-            .then(data => {
-                setMessage(data.message); // Show backend message
-                setMessageType(data.success ? "success" : "danger");
+        try {
+            const res = await fetch("http://localhost:2002/create", options);
+            const data = await res.json();
 
-                if (data.success) {
-                    fetchPosts(); // Refresh posts
-                    setTitle("");
-                    setDescription("");
-                    setPostImage("");
+            setMessage(data.message);
+            setMessageType(data.success ? "success" : "danger");
 
-                    // Clear message after 3 seconds
-                    setTimeout(() => {
-                        setMessage("");
-                    }, 3000);
-                }
-            })
-            .catch(err => {
-                console.log("Error:", err); // Log any network errors
-            });
+            if (data.success) {
+                fetchPosts();
+                setTitle("");
+                setDescription("");
+                setPostImage("");
+
+                setTimeout(() => {
+                    setMessage("");
+                }, 3000);
+            }
+        } catch (err) {
+            console.log("Error:", err);
+        }
     };
+
+
 
     return (
         <div className="container">

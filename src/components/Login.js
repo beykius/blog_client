@@ -34,7 +34,8 @@ const Login = ({socket}) => {
                 socket.emit("login", username, data.id);
                 socket.emit("allUsers");
 
-                localStorage.setItem("token", data.token);
+                localStorage.setItem("user token", data.token);
+
                 setUser({
                     username,
                     image: data.image,

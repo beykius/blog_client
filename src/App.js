@@ -44,7 +44,7 @@ const user = useStore((state) => state.user);
                     bottom: "20px",
                     right: "20px",
                     display: visible ? "block" : "none",
-                    background: "#fff",
+                    background: "#c0b2a0",
                     color: "#000",
                     border: "none",
                     borderRadius: "50%",

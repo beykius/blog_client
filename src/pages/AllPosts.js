@@ -9,12 +9,12 @@ const AllPosts = () => {
     const navigate = useNavigate();
 
     const [currentPage, setCurrentPage] = useState(1);
-    const postsPerPage = 6; // Define how many posts you want per page
+    const postsPerPage = 6;
 
     const totalPages = Math.ceil(posts.length / postsPerPage);
 
     const handlePageChange = (pageNumber) => {
-        if (pageNumber < 1 || pageNumber > totalPages) return; // Prevent invalid page number
+        if (pageNumber < 1 || pageNumber > totalPages) return;
         setCurrentPage(pageNumber);
     };
 
@@ -87,12 +87,14 @@ const AllPosts = () => {
             const res = await fetch(`http://localhost:2002/posts/like/${postId}`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
-                body: JSON.stringify({user}),
+                body: JSON.stringify({
+                    userId: user._id,
+                }),
             });
 
             const data = await res.json();
             if (data.success) {
-                fetchPosts(); // Refresh posts after liking/unliking
+                fetchPosts();
             } else {
                 console.error("Failed to toggle like:", data.message);
             }

@@ -79,7 +79,9 @@ const UserProfile = ({ socket }) => {
         const res = await fetch(`http://localhost:2002/posts/like/${postId}`, {
             method: "POST",
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-            body: JSON.stringify({ user }),
+            body: JSON.stringify({
+                userId: user._id,
+            }),
         });
 
         const data = await res.json();
