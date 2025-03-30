@@ -4,7 +4,7 @@ import useStore from "../store/main";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BackButton from "../components/BackButton";
-import { v4 as uuidv4 } from 'uuid';
+
 
 const Messages = ({ socket }) => {
     const [users, setUsers] = useState([]);
@@ -39,24 +39,23 @@ const Messages = ({ socket }) => {
         };
     }, [socket]);
 
+
+
     useEffect(() => {
         if (!socket) return;
 
-        const handleNewMessage = (newMessage) => {
-            // Ensure that you only add the message to the state if it's not the one the sender just sent
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                { ...newMessage, senderImage: newMessage.senderImage || "default-image.jpg", },
-            ]);
-        };
+        socket.on("newMessage", (newMessage) => {
+            setMessages((prevMessages) => {
+                // Allow only messages with `_id` (avoid duplicates)
+                if (!newMessage._id || prevMessages.some((msg) => msg._id === newMessage._id)) {
+                    return prevMessages;
+                }
+                return [...prevMessages, newMessage];
+            });
+        });
 
-
-        // Listen for new messages
-        socket.on("newMessage", handleNewMessage);
-
-        //To make sure there are no duplicates
         return () => {
-            socket.off("newMessage", handleNewMessage);
+            socket.off("newMessage");
         };
     }, [socket]);
 
@@ -72,6 +71,21 @@ const Messages = ({ socket }) => {
             }
         }
     }, [receiverId, users]);
+
+    // Useeffect for comment deletion
+    useEffect(() => {
+        if (!socket) return;
+
+        const handleDeletedMessage = ({ messageId }) => {
+            setMessages(prevMessages => prevMessages.filter(msg => msg._id !== messageId));
+        };
+
+        socket.on("messageDeleted", handleDeletedMessage);
+
+        return () => {
+            socket.off("messageDeleted", handleDeletedMessage);
+        };
+    }, [socket]);
 
     // Fetch all users when the component mounts
     useEffect(() => {
@@ -168,37 +182,20 @@ const Messages = ({ socket }) => {
             timestamp: new Date().toISOString(),
         };
 
-        console.log("Sending message:", newMessage);
+        socket.emit("sendMessage", newMessage);
 
-        // Emit the message via Socket.io (for real-time update)
-        socket.emit("sendMessage", newMessage); // Emit to server (Socket.io)
-
-        // Clear the message input after sending
         setMessage("");
     };
 
-    const deleteMessages = async (messageId) => {
-        // Check if messageId is available, if not show error toast
+    const deleteMessages = (messageId) => {
         if (!messageId) {
             toast.error("You cannot delete this message, please try again later.");
             return;
         }
 
-        const token = localStorage.getItem("token");
-        const res = await fetch(`http://localhost:2002/messages/${messageId}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-        });
-        const data = await res.json();
+        socket.emit("deleteMessage", { messageId });
 
-        if (data.success) {
-            setMessages(prevMessages => prevMessages.filter(message => message._id !== messageId));
-        } else {
-            console.error("Failed to delete message:", data.message);
-        }
+        setMessages(prevMessages => prevMessages.filter(message => message._id !== messageId));
     };
 
     const deleteUser = async (userId) => {
