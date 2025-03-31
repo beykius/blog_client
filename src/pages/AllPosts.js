@@ -7,11 +7,10 @@ const AllPosts = () => {
     const {posts, setPosts} = useStore();
     const user = useStore((state) => state.user);
     const navigate = useNavigate();
-
     const [currentPage, setCurrentPage] = useState(1);
     const postsPerPage = 6;
-
     const totalPages = Math.ceil(posts.length / postsPerPage);
+
 
     const handlePageChange = (pageNumber) => {
         if (pageNumber < 1 || pageNumber > totalPages) return;
@@ -28,7 +27,6 @@ const AllPosts = () => {
         fetchPosts();
     }, [setPosts]);
 
-
     const handleUserClick = (username) => {
         if (username === user.username) {
             navigate('/profile');
@@ -38,68 +36,55 @@ const AllPosts = () => {
     };
 
     const fetchPosts = async () => {
-        try {
-            const res = await fetch("http://localhost:2002/allposts");
-            const data = await res.json();
-            if (data.success) {
-                setPosts(data.posts);
-            } else {
-                console.error("Failed to load posts");
-            }
-        } catch (err) {
-            console.error("Error fetching posts:", err);
+        const res = await fetch("http://localhost:2002/allposts");
+        const data = await res.json();
+        if (data.success) {
+            setPosts(data.posts);
+        } else {
+            console.error("Failed to load posts");
         }
     };
-
 
     const handleDelete = async (postId) => {
-        try {
-            const token = localStorage.getItem("token");
-            const res = await fetch(`http://localhost:2002/deletePost/${postId}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-            });
+        const token = localStorage.getItem("token");
+        const res = await fetch(`http://localhost:2002/deletePost/${postId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
 
-            const data = await res.json();
-            if (data.success) {
-                setPosts(data.posts);
+        const data = await res.json();
+        if (data.success) {
+            setPosts(data.posts);
 
-            } else {
-                console.error("Failed to delete post:", data.message);
-            }
-        } catch (err) {
-            console.error("Error deleting post:", err);
+        } else {
+            console.error("Failed to delete post:", data.message);
         }
+
     };
 
-
     const toggleLike = async (postId) => {
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                console.error("No token found, user must log in");
-                return;
-            }
+        const token = localStorage.getItem("token");
+        if (!token) {
+            console.error("No token found, user must log in");
+            return;
+        }
 
-            const res = await fetch(`http://localhost:2002/posts/like/${postId}`, {
-                method: "POST",
-                headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
-                body: JSON.stringify({
-                    userId: user._id,
-                }),
-            });
+        const res = await fetch(`http://localhost:2002/posts/like/${postId}`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
+            body: JSON.stringify({
+                userId: user._id,
+            }),
+        });
 
-            const data = await res.json();
-            if (data.success) {
-                fetchPosts();
-            } else {
-                console.error("Failed to toggle like:", data.message);
-            }
-        } catch (err) {
-            console.error("Error toggling like:", err);
+        const data = await res.json();
+        if (data.success) {
+            fetchPosts();
+        } else {
+            console.error("Failed to toggle like:", data.message);
         }
     };
 
@@ -111,7 +96,7 @@ const AllPosts = () => {
                     <p className="text-center w-100">No posts available.</p>
                 ) : (
                     currentPosts.map((post) => (
-                        <div className="col-12 col-md-6 col-lg-4 col-xl-4 mb-4 " key={post._id} >
+                        <div className="col-12 col-md-6 col-lg-4 col-xl-4 mb-4 " key={post._id}>
                             <div
                                 className="card"
                                 style={{
@@ -120,17 +105,17 @@ const AllPosts = () => {
                                     backgroundSize: "cover",
                                     backgroundPosition: "center",
                                     minHeight: "400px",
-                                    paddingTop: "200px", // Create padding space for the image
+                                    paddingTop: "200px",
                                     border: 'none',
                                     borderRadius: '0',
-                                    filter: "grayscale(100%)", // Set image to grayscale
-                                    transition: "filter 0.5s ease", // Smooth transition effect
+                                    filter: "grayscale(100%)",
+                                    transition: "filter 0.5s ease",
                                 }}
                                 onMouseEnter={(e) => {
-                                    e.currentTarget.style.filter = "grayscale(0%)"; // Remove grayscale on hover
+                                    e.currentTarget.style.filter = "grayscale(0%)";
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.currentTarget.style.filter = "grayscale(100%)"; // Add grayscale back when hover ends
+                                    e.currentTarget.style.filter = "grayscale(100%)";
                                 }}
                             >
                                 <div
@@ -140,7 +125,7 @@ const AllPosts = () => {
                                         bottom: "20px",
                                         left: "50%",
                                         transform: "translateX(-50%)",
-                                        width: "80%", // 80% width of the card
+                                        width: "80%",
                                         backgroundColor: "white",
                                         padding: "15px",
                                         boxShadow: "0 -4px 10px rgba(0, 0, 0, 0.1)",
@@ -167,7 +152,7 @@ const AllPosts = () => {
                                                     {post.username}
                                                 </span>
                                                 <br/>
-                                                <small>{post.time}</small> {/* Display date */}
+                                                <small>{post.time}</small>
                                             </p>
                                         </div>
                                         <div>
@@ -207,7 +192,7 @@ const AllPosts = () => {
                             <button
                                 className="page-link"
                                 onClick={() => handlePageChange(currentPage - 1)}
-                                disabled={currentPage === 1} // Disable if it's the first page
+                                disabled={currentPage === 1}
                                 style={{
                                     border: "1px solid #ddd",
                                     outline: "none",
@@ -242,7 +227,7 @@ const AllPosts = () => {
                             <button
                                 className="page-link"
                                 onClick={() => handlePageChange(currentPage + 1)}
-                                disabled={currentPage === totalPages} // Disable if it's the last page
+                                disabled={currentPage === totalPages}
                                 style={{
                                     border: "1px solid #ddd",
                                     outline: "none",

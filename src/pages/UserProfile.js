@@ -86,7 +86,7 @@ const UserProfile = ({ socket }) => {
 
         const data = await res.json();
         if (data.success) {
-            fetchUserPosts(); // Refresh posts after liking/unliking
+            fetchUserPosts();
         } else {
             console.error("Failed to toggle like:", data.message);
         }
@@ -108,10 +108,7 @@ const UserProfile = ({ socket }) => {
         };
 
         console.log("Sending message:", newMessage);
-
-
         socket.emit("sendMessage", newMessage);
-
 
         socket.once("messageStatus", (status) => {
             if (status.success) {
@@ -166,8 +163,8 @@ const UserProfile = ({ socket }) => {
                                     ref={inputRef}
                                     value={message}
                                     onChange={(e) => {
-                                        setMessage(e.target.value); // Update message state
-                                        setMessageStatus("");        // Reset message status when the user starts typing
+                                        setMessage(e.target.value);
+                                        setMessageStatus("");
                                     }} />
                                 <button className="btn btn-warning ms-2" onClick={handleSendMessage}>Send</button>
                             </div>
@@ -200,17 +197,17 @@ const UserProfile = ({ socket }) => {
                                             backgroundSize: "cover",
                                             backgroundPosition: "center",
                                             minHeight: "400px",
-                                            paddingTop: "200px", // Create padding space for the image
+                                            paddingTop: "200px",
                                             border: 'none',
                                             borderRadius: '0',
-                                            filter: "grayscale(100%)", // Set image to grayscale
-                                            transition: "filter 0.5s ease", // Smooth transition effect
+                                            filter: "grayscale(100%)",
+                                            transition: "filter 0.5s ease",
                                         }}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.filter = "grayscale(0%)"; // Remove grayscale on hover
+                                            e.currentTarget.style.filter = "grayscale(0%)";
                                         }}
                                         onMouseLeave={(e) => {
-                                            e.currentTarget.style.filter = "grayscale(100%)"; // Add grayscale back when hover ends
+                                            e.currentTarget.style.filter = "grayscale(100%)";
                                         }}
                                     >
                                         <div

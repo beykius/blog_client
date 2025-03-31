@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import useStore from "../store/main";
 import BackButton from "../components/BackButton";
 
@@ -6,25 +6,20 @@ const CreatePost = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [postImage, setPostImage] = useState("");
-    const { setPosts, user } = useStore();
+    const {setPosts, user} = useStore();
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");
 
     const fetchPosts = async () => {
-        try {
-            const res = await fetch("http://localhost:2002/allposts");
-            const data = await res.json();
-            if (data.success) {
-                setPosts(data.posts);
-            } else {
-                console.error("Failed to load posts");
-            }
-        } catch (err) {
-            console.error("Error fetching posts:", err);
+        const res = await fetch("http://localhost:2002/allposts");
+        const data = await res.json();
+        if (data.success) {
+            setPosts(data.posts);
+        } else {
+            console.error("Failed to load posts");
         }
     };
 
-    // In your CreatePost component, explicitly pass user._id and user.username
     const handleSubmit = async () => {
         if (!title || !description) {
             setMessage("Please fill in both fields.");
@@ -32,14 +27,13 @@ const CreatePost = () => {
             return;
         }
 
-        // Ensure user data is correctly captured
         const postData = {
             title,
             description,
             postImage,
             time: new Date().toLocaleString("en-GB"),
-            userId: user?._id,  // Ensure this is correctly capturing the logged-in user's ID
-            username: user?.username,  // Ensure this is correctly capturing the logged-in user's username
+            userId: user?._id,
+            username: user?.username,
             userImage: user?.image || "default-image.jpg",
         };
 
@@ -53,7 +47,6 @@ const CreatePost = () => {
             body: JSON.stringify(postData),
         };
 
-        try {
             const res = await fetch("http://localhost:2002/create", options);
             const data = await res.json();
 
@@ -70,12 +63,7 @@ const CreatePost = () => {
                     setMessage("");
                 }, 3000);
             }
-        } catch (err) {
-            console.log("Error:", err);
-        }
     };
-
-
 
     return (
         <div className="container">

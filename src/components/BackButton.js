@@ -5,7 +5,7 @@ const BackButton = () => {
     const navigate = useNavigate();
 
     const goBack = () => {
-        navigate(-1); // This takes the user to the previous page in history
+        navigate(-1);
     };
 
     return (

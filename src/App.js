@@ -3,8 +3,6 @@ import 'bootstrap/dist/css/bootstrap.css'
 import {useEffect, useState} from "react";
 import {BrowserRouter, Routes, Route, useNavigate} from "react-router-dom";
 import useStore from "./store/main";
-import Toolbar from "./components/Toolbar";
-import Login from "./components/Login";
 import Register from "./components/Register";
 import Logout from "./components/Logout";
 import CreatePosts from "./pages/CreatePosts";
@@ -17,6 +15,7 @@ import Messages from "./pages/Messages";
 import Logo from './components/Logo'
 import {socket} from "./socket"
 import Footer from "./components/Footer";
+import Login from './components/Login'
 
 function App() {
 const user = useStore((state) => state.user);
@@ -64,6 +63,7 @@ const user = useStore((state) => state.user);
                     <div className="d-flex p-5">
                         <Routes>
                             <Route path="/register" element={<Register/>}/>
+                            <Route path="/login" element={<Login/>}/>
                             <Route path='/logout' element={<Logout socket={socket}/>}/>
                             <Route path='/create-post' element={<CreatePosts/>}/>
                             <Route path='/posts' element={<AllPosts/>}/>

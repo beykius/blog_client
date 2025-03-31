@@ -18,38 +18,34 @@ const MyFavorites = () => {
 
 
     const fetchFavorites = async () => {
-        try {
-            if (!user || !user._id || !token) {
-                console.error("User not logged in or token missing");
-                return;
-            }
+        if (!user || !user._id || !token) {
+            console.error("User not logged in or token missing");
+            return;
+        }
 
-            console.log("Fetching favorites for userId:", user._id);  // Check if user._id is correct
+        console.log("Fetching favorites for userId:", user._id);
 
-            const res = await fetch('http://localhost:2002/posts/favorites', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    userId: user._id,  // Send userId as part of the request body
-                }),
-            });
+        const res = await fetch('http://localhost:2002/posts/favorites', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                userId: user._id,
+            }),
+        });
 
-            if (!res.ok) {
-                throw new Error(`HTTP error! Status: ${res.status}`);
-            }
+        if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
 
-            const data = await res.json();
-            if (data.success) {
-                console.log('user', user);
-                setFavorites(data.favorites);
-            } else {
-                console.error("Failed to fetch favorites:", data.message);
-            }
-        } catch (err) {
-            console.error("Error fetching favorite posts:", err);
+        const data = await res.json();
+        if (data.success) {
+            console.log('user', user);
+            setFavorites(data.favorites);
+        } else {
+            console.error("Failed to fetch favorites:", data.message);
         }
     };
 
@@ -66,7 +62,6 @@ const MyFavorites = () => {
             return;
         }
 
-        // Ensure that the `user` object has a valid `_id`
         if (!user || !user._id) {
             console.error("User ID is missing");
             return;
@@ -79,13 +74,13 @@ const MyFavorites = () => {
                 "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
-                userId: user._id,  // Send the correct userId in the body
+                userId: user._id,
             }),
         });
 
         const data = await res.json();
         if (data.success) {
-            fetchFavorites(); // Refresh favorites after toggling like
+            fetchFavorites();
         } else {
             console.error("Failed to toggle like:", data.message);
         }
@@ -107,17 +102,17 @@ const MyFavorites = () => {
                                     backgroundSize: "cover",
                                     backgroundPosition: "center",
                                     minHeight: "400px",
-                                    paddingTop: "200px", // Create padding space for the image
+                                    paddingTop: "200px",
                                     border: 'none',
                                     borderRadius: '0',
-                                    filter: "grayscale(100%)", // Set image to grayscale
-                                    transition: "filter 0.5s ease", // Smooth transition effect
+                                    filter: "grayscale(100%)",
+                                    transition: "filter 0.5s ease",
                                 }}
                                 onMouseEnter={(e) => {
-                                    e.currentTarget.style.filter = "grayscale(0%)"; // Remove grayscale on hover
+                                    e.currentTarget.style.filter = "grayscale(0%)";
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.currentTarget.style.filter = "grayscale(100%)"; // Add grayscale back when hover ends
+                                    e.currentTarget.style.filter = "grayscale(100%)";
                                 }}
                             >
                                 <div

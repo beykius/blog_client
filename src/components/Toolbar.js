@@ -14,8 +14,9 @@ const Toolbar = () => {
         setIsMenuOpen(false);
     };
 
+    // Scroll to top on route change
     useEffect(() => {
-        window.scrollTo(0, window.innerHeight); // Scroll to top on route change
+        window.scrollTo(0, window.innerHeight);
     }, [location]); //
 
     return (
@@ -77,7 +78,7 @@ const Toolbar = () => {
                                 <Link to="/login">Login</Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="/">Register</Link>
+                                <Link to="/register">Register</Link>
                             </li></>)}
                             {user && (
                             <>

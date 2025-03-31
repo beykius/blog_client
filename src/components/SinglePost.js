@@ -9,20 +9,16 @@ const SinglePost = () => {
     const {user} = useStore();
     const [post, setPost] = useState(null);
     const [comment, setComment] = useState('');
-const navigate = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPost = async () => {
-            try {
-                const res = await fetch(`http://localhost:2002/posts/${postId}`);
-                const data = await res.json();
-                if (data.success) {
-                    setPost(data.post); // Assuming response has the post data
-                } else {
-                    console.error("Post not found");
-                }
-            } catch (err) {
-                console.error("Error fetching post:", err);
+            const res = await fetch(`http://localhost:2002/posts/${postId}`);
+            const data = await res.json();
+            if (data.success) {
+                setPost(data.post);
+            } else {
+                console.error("Post not found");
             }
         };
 
@@ -40,7 +36,6 @@ const navigate = useNavigate();
             navigate(`/users/${username}`);
         }
     };
-
 
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
@@ -65,38 +60,32 @@ const navigate = useNavigate();
         if (data.success) {
             setPost(prevPost => ({
                 ...prevPost,
-                comments: [...prevPost.comments, data.comment], // Add the new comment
+                comments: [...prevPost.comments, data.comment],
             }));
-            setComment(""); // Clear the input field after posting
+            setComment("");
         } else {
             console.error("Failed to add comment:", data.message);
         }
     };
 
-
     const handleDelete = async (commentId) => {
-        try {
-            const token = localStorage.getItem("token");
-            const res = await fetch(`http://localhost:2002/post/${postId}/comment/${commentId}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-            });
+        const token = localStorage.getItem("token");
+        const res = await fetch(`http://localhost:2002/post/${postId}/comment/${commentId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
 
-            const data = await res.json();
-            if (data.success) {
-                // Remove the deleted comment from the post's comments array
-                setPost(prevPost => ({
-                    ...prevPost,
-                    comments: prevPost.comments.filter(comment => comment.commentId !== commentId),
-                }));
-            } else {
-                console.error("Failed to delete comment:", data.message);
-            }
-        } catch (err) {
-            console.error("Error deleting comment:", err);
+        const data = await res.json();
+        if (data.success) {
+            setPost(prevPost => ({
+                ...prevPost,
+                comments: prevPost.comments.filter(comment => comment.commentId !== commentId),
+            }));
+        } else {
+            console.error("Failed to delete comment:", data.message);
         }
     };
 
@@ -131,7 +120,6 @@ const navigate = useNavigate();
                     </div>
                 </div>
             </div>
-
 
 
             {/* Comment Section */}
@@ -174,6 +162,7 @@ const navigate = useNavigate();
                         No comments yet. Be the first to comment!
                     </div>
                 )}
+
                 {/* Comment Form */}
                 <form onSubmit={handleCommentSubmit}>
                     <div className="d-flex">

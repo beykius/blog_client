@@ -1,19 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, {useState, useEffect, useRef} from 'react';
+import {useParams, Link} from 'react-router-dom';
 import useStore from "../store/main";
 import BackButton from "../components/BackButton";
 
 
-const Messages = ({ socket }) => {
+const Messages = ({socket}) => {
     const [users, setUsers] = useState([]);
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
     const messagesEndRef = useRef(null);
     const [profile, setProfile] = useState(null);
-    const { user } = useStore();
-    const { receiverId } = useParams();
-
-
+    const {user} = useStore();
+    const {receiverId} = useParams();
 
     // ONLINE OR NOT
     useEffect(() => {
@@ -31,14 +29,13 @@ const Messages = ({ socket }) => {
         return () => socket.off("allUsers");
     }, [socket]);
 
-
-
+    //useeffect for sending message
     useEffect(() => {
         if (!socket) return;
 
         socket.on("newMessage", (newMessage) => {
             setMessages((prevMessages) => {
-                // Allow only messages with `_id` (avoid duplicates)
+                //  (avoid duplicates)
                 if (!newMessage._id || prevMessages.some((msg) => msg._id === newMessage._id)) {
                     return prevMessages;
                 }
@@ -51,10 +48,11 @@ const Messages = ({ socket }) => {
         };
     }, [socket]);
 
+    // useeffect for selected user
     useEffect(() => {
         if (receiverId && users.length > 0) {
             const selectedUser = users.find((user) => user._id === receiverId);
-            console.log("Selected user:", selectedUser); // Debugging
+            console.log("Selected user:", selectedUser);
             if (selectedUser) {
                 setProfile(selectedUser);
                 console.log(selectedUser);
@@ -68,7 +66,7 @@ const Messages = ({ socket }) => {
     useEffect(() => {
         if (!socket) return;
 
-        const handleDeletedMessage = ({ messageId }) => {
+        const handleDeletedMessage = ({messageId}) => {
             setMessages(prevMessages => prevMessages.filter(msg => msg._id !== messageId));
         };
 
@@ -79,34 +77,31 @@ const Messages = ({ socket }) => {
         };
     }, [socket]);
 
-    // Fetch all users when the component mounts
+    // Fetch all users
     useEffect(() => {
         const fetchUsers = async () => {
-            try {
-                const token = localStorage.getItem("token");
-                if (!token) {
-                    console.error("No token found, user must log in");
-                    return;
-                }
-
-                const response = await fetch("http://localhost:2002/users", {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                const data = await response.json();
-                if (data.success) {
-                    console.log("Fetched users:", data.users);  // Debugging
-                    const filteredUsers = data.users.filter((u) => u._id !== user._id);
-                    setUsers(filteredUsers);
-                } else {
-                    console.error("Failed to fetch users");
-                }
-            } catch (error) {
-                console.error("Error fetching users:", error);
+            const token = localStorage.getItem("token");
+            if (!token) {
+                console.error("No token found, user must log in");
+                return;
             }
+
+            const response = await fetch("http://localhost:2002/users", {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                console.log("Fetched users:", data.users);  // Debugging
+                const filteredUsers = data.users.filter((u) => u._id !== user._id);
+                setUsers(filteredUsers);
+            } else {
+                console.error("Failed to fetch users");
+            }
+
         };
 
         fetchUsers();
@@ -125,7 +120,6 @@ const Messages = ({ socket }) => {
                 return;
             }
 
-            try {
                 const response = await fetch(`http://localhost:2002/messages/mymessages/${receiverId}?senderId=${user._id}`, {
                     method: "GET",
                     headers: {
@@ -135,20 +129,17 @@ const Messages = ({ socket }) => {
                 });
 
                 const data = await response.json();
-                console.log("Fetched messages:", data.messages); // Debugging
+                console.log("Fetched messages:", data.messages);
 
                 if (data.success) {
                     const uniqueMessages = data.messages.map((msg) => ({
                         ...msg,
-                        senderImage: msg.senderImage || "default-image.jpg", // Ensure image exists
+                        senderImage: msg.senderImage || "default-image.jpg",
                     }));
                     setMessages(uniqueMessages);
                 } else {
                     console.error("Failed to fetch messages");
                 }
-            } catch (error) {
-                console.error("Error fetching messages:", error);
-            }
         };
 
         fetchMessages();
@@ -156,7 +147,7 @@ const Messages = ({ socket }) => {
 
     // Scroll to bottom on new messages
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
     }, [messages]);
 
     const handleSendMessage = async (e) => {
@@ -180,7 +171,7 @@ const Messages = ({ socket }) => {
     };
 
     const deleteMessages = (messageId) => {
-        socket.emit("deleteMessage", { messageId });
+        socket.emit("deleteMessage", {messageId});
 
         setMessages(prevMessages => prevMessages.filter(message => message._id !== messageId));
     };
@@ -215,7 +206,8 @@ const Messages = ({ socket }) => {
                             <Link key={x._id} to={`/messages/my-messages/${x._id}`}
                                   className="list-group-item list-group-item-action d-flex align-items-center position-relative">
                                 <img src={x.image || "default-image.jpg"} alt={x.username}
-                                     className="rounded-circle me-3" style={{ width: 40, height: 40, objectFit: "cover" }} />
+                                     className="rounded-circle me-3"
+                                     style={{width: 40, height: 40, objectFit: "cover"}}/>
 
                                 <span>{x.username}</span>
 
@@ -237,7 +229,8 @@ const Messages = ({ socket }) => {
                                         <button className="btn btn-sm" onClick={() => deleteUser(x._id)}>
                                             <svg xmlns="http://www.w3.org/2000/svg" height="24px"
                                                  viewBox="0 -960 960 960" width="24px" fill="#8B1A10">
-                                                <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                                                <path
+                                                    d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
                                             </svg>
                                         </button>
                                     )}
@@ -278,8 +271,8 @@ const Messages = ({ socket }) => {
                                                 <button
                                                     className="btn btn-sm"
                                                     onClick={async () => {
-                                                        console.log("Deleting message with ID:", msg._id); // Log message ID before deletion
-                                                        await deleteMessages(msg._id); // Call deleteMessages and wait for it to complete
+                                                        console.log("Deleting message with ID:", msg._id);
+                                                        await deleteMessages(msg._id);
                                                     }}
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" height="24px"

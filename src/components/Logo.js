@@ -3,7 +3,7 @@ import Toolbar from "./Toolbar";
 import Login from "./Login";
 import Register from "./Register";
 
-const Logo = ({ socket }) => {  // Pass socket as a prop
+const Logo = ({ socket }) => {
     const location = useLocation();
 
     return (
@@ -13,13 +13,13 @@ const Logo = ({ socket }) => {  // Pass socket as a prop
                 <Toolbar />
             </div>
 
-            {/* Centered Content */}
+            {/* Main content of logo */}
             <div className="container text-2xl d-flex flex-column justify-content-center flex-grow-1 align-items-center text-center">
                 {/* Show Login or Register only when on their respective routes */}
                 {location.pathname === "/login" && <Login socket={socket} />}
                 {location.pathname === "/register" && <Register />}
 
-                {/* Show default logo text if not on login/register page */}
+
                 {!(location.pathname === "/login" || location.pathname === "/register") && (
                     <>
                         <div className="d-flex align-items-center text-center">

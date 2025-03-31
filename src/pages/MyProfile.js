@@ -12,9 +12,8 @@ const MyProfile = () => {
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [isEditingUsername, setIsEditingUsername] = useState(false);
-    const [successMessage, setSuccessMessage] = useState(""); // State for success message
-    const [errorMessage, setErrorMessage] = useState(""); // State for password error message
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
 
     const handleChangePassword = async () => {
@@ -30,14 +29,14 @@ const MyProfile = () => {
         });
         const data = await res.json();
         if (data.success) {
-            setSuccessMessage(data.message); // Show success message if password change is successful
-            setErrorMessage(""); // Clear any previous error messages
+            setSuccessMessage(data.message);
+            setErrorMessage("");
             localStorage.removeItem("token");
             setUser(null);
             navigate("/login");
         } else {
-            setSuccessMessage(""); // Clear any previous success messages
-            setErrorMessage(data.message); // Set error message
+            setSuccessMessage("");
+            setErrorMessage(data.message);
         }
     };
 
